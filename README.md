@@ -1,4 +1,4 @@
-# parcel_delievery_system-front
+# parcel_delivery_system-front
 
 ## Project setup
 ```
