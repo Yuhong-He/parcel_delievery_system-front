@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import lang from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale'
 import {
   Pagination,
   Dialog,
@@ -164,6 +166,8 @@ Vue.use(Empty);
 Vue.use(Statistic);
 
 Vue.use(Loading.directive);
+
+locale.use(lang)
 
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$msgbox = MessageBox;
