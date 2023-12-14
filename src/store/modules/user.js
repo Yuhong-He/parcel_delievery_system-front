@@ -2,7 +2,7 @@ export default {
     namespaced: true,
     state: {
         username: '',
-        userType: '',
+        userType: 0,
         accessToken: '',
         refreshToken: '',
         expiredTime: ''

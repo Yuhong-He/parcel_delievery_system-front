@@ -12,11 +12,6 @@ import 'babel-polyfill';
 Vue.config.productionTip = false
 Vue.prototype.$api = api;
 
-router.beforeEach((to, from, next) => {
-  console.log("hello world")
-  next();
-})
-
 router.afterEach(() => {
   window.scrollTo(0, 0);
 })

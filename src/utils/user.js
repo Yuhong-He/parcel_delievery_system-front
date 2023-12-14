@@ -11,5 +11,5 @@ export function cleanUserInfo() {
     store.commit('User/setAccessToken', "");
     store.commit('User/setExpiredTime', "");
     store.commit('User/setUsername', "");
-    store.commit('User/setUserType', "");
+    store.commit('User/setUserType', 0);
 }

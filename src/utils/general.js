@@ -15,6 +15,8 @@ export function generalError(data) { // error with request.js Promise.resolve
 }
 
 export function unexpectedError(res) { // error with request.js Promise.reject
-    router.push("/").then(() => {});
+    if(router.currentRoute.path !== '/') {
+        router.push("/").then(() => {});
+    }
     console.log(res);
 }

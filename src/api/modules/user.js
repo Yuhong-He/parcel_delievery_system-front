@@ -1,5 +1,4 @@
 import request from "@/utils/request";
-import store from "@/store";
 
 const path = "/user";
 
@@ -23,6 +22,15 @@ export default {
             url: path + "/login",
             method: "post",
             data: data
+        })
+    },
+    searchStudentByName(data) {
+        return request({
+            url: path + "/searchStudentByName",
+            method: "get",
+            params: {
+                searchTxt: data
+            }
         })
     }
 }

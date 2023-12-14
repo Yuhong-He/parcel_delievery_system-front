@@ -5,9 +5,8 @@ import router from "@/router";
 import store from "@/store";
 import {cleanUserInfo} from "@/utils/user";
 
-const Base_URL = 'http://localhost:18080/api'; // local
-
-let loadingInstance;
+const Base_URL = 'http://localhost:18080'; // dev, front: dev.ucdparcel.ie
+// const Base_URL = 'http://api.ucdparcel.ie'; // prod, front: www.ucdparcel.ie
 
 const service = axios.create({
     timeout: 5000,
@@ -21,7 +20,6 @@ const service = axios.create({
 service.interceptors.request.use(
     config => {
         config.headers['AccessToken'] = store.state.User.accessToken;
-        loadingInstance = Loading.service({ fullscreen: true });
         return config
     },
     error => {
@@ -35,7 +33,6 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
     response => {
-        loadingInstance.close();
         if (response.status === 200) {
             if(response.data.code === 201) { // custom response code
                 Message.error("Server Error");
