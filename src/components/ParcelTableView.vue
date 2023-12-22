@@ -46,10 +46,15 @@ import {generalError, unexpectedError} from "@/utils/general";
 import {Loading} from "element-ui";
 
 export default {
+  props: {
+    currentPage: {
+      type: Number,
+      default: 1
+    }
+  },
   data() {
     return {
       tableData: [],
-      currentPage: 1,
       total: 0
     }
   },

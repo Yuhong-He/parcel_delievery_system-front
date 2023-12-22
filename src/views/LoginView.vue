@@ -332,13 +332,8 @@ export default{
             confirmButtonText: "Confirm",
             callback: () => {}
           });
-        } else if (res.data.code === 214) {
+        } else if (res.data.code === 213 || res.data.code === 214) {
           this.$alert("Verification code incorrect", {
-            confirmButtonText: "Confirm",
-            callback: () => {}
-          });
-        } else if (res.data.code === 213) {
-          this.$alert("Verification code expired", {
             confirmButtonText: "Confirm",
             callback: () => {}
           });
@@ -385,7 +380,7 @@ export default{
         } else if (res.data.code === 211) {
           this.$message({
             type: 'warning',
-            message: "Please re-send after the countdown"
+            message: "Please re-send after 1 minute"
           });
         } else if (res.data.code === 212) {
           this.$message({

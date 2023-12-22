@@ -9,7 +9,7 @@ const Base_URL = 'http://localhost:18080'; // dev, front: dev.ucdparcel.ie
 // const Base_URL = 'https://api.ucdparcel.ie'; // prod, front: www.ucdparcel.ie
 
 const service = axios.create({
-    timeout: 5000,
+    timeout: 30000,
     responseType: "json",
     baseURL: Base_URL,
     headers: {

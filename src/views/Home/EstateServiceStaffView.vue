@@ -4,7 +4,7 @@
       <el-button type="primary" @click="openAddParcelDialog()">Add Parcel</el-button>
     </div>
     <div>
-      <ParcelTableView ref="parcelTableViewRef"></ParcelTableView>
+      <ParcelTableView ref="parcelTableViewRef" :currentPage="page"></ParcelTableView>
     </div>
 
     <el-dialog
@@ -142,7 +142,8 @@ export default {
         value: "Village"
       }],
       loading: false,
-      studentOptions: []
+      studentOptions: [],
+      page: 1
     }
   },
   methods: {
@@ -161,12 +162,12 @@ export default {
     searchStudent(query) {
       if (query !== '') {
         this.loading = true;
-        this.doGetCategoryOptions(query);
+        this.getStudentOptions(query);
       } else {
         this.studentOptions = [];
       }
     },
-    doGetCategoryOptions(query) {
+    getStudentOptions(query) {
       this.studentOptions = [];
       this.$api.searchStudentByName(query).then(res => {
         if(res.data.code === 200) {
@@ -205,6 +206,7 @@ export default {
             message: "Add Success",
             type: 'success'
           });
+          this.page = 1;
           this.displayAddDialog = false;
           this.$refs.parcelTableViewRef.getParcelData();
         } else {
