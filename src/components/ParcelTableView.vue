@@ -19,21 +19,26 @@
             {{ getParcelType(scope.row.type) }}
           </template>
         </el-table-column>
-        <el-table-column prop="address" v-if="this.userType !== 1" label="Address" width="270"></el-table-column>
+        <el-table-column prop="address" v-if="this.userType !== 1 && this.userType !== 3" label="Address" width="270"></el-table-column>
         <el-table-column prop="status" label="Status"></el-table-column>
         <el-table-column label="Time">
           <template v-slot="scope">
             {{ convertTimestamp(scope.row.timestamp) }}
           </template>
         </el-table-column>
-        <el-table-column v-if="this.userType === 1">
+        <el-table-column v-if="this.userType === 1 && showConfirmAddressButtonColumn">
           <template v-slot="scope">
             <el-button icon="el-icon-check" v-if="scope.row.status === 'Broker notified student, waiting confirm address'" @click="confirmAddress(scope.row.id)" plain>Confirm address</el-button>
           </template>
         </el-table-column>
-        <el-table-column v-if="this.userType === 2">
+        <el-table-column v-if="this.userType === 2 && showDeliverButtonColumn">
           <template v-slot="scope">
             <el-button icon="el-icon-position" v-if="scope.row.status === 'Receiver Confirmed the address'" @click="deliverConfirm(scope.row.id)" plain>Deliver mail</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="this.userType === 3 && showCollectButtonColumn">
+          <template v-slot="scope">
+            <el-button icon="el-icon-goods" v-if="scope.row.status === 'Broker send parcel to Merville Room'" @click="confirmCollect(scope.row.id)" plain>Confirm collected</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -67,6 +72,15 @@
         <el-button type="primary" @click="doConfirmAddress">Confirm</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+        :visible.sync="confirmCollectDialog"
+        width="30%">
+      <span style="font-size: 1.5em">Confirm student has collected the parcel.</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="confirmCollectDialog = false">Cancel</el-button>
+        <el-button type="primary" @click="doConfirmCollect">Confirm</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -92,8 +106,13 @@ export default {
       currentPageNumber: this.currentPage,
       deliverConfirmDialog: false,
       confirmAddressDialog: false,
+      confirmCollectDialog: false,
       deliverParcelId: "",
-      confirmParcelId: ""
+      confirmParcelId: "",
+      collectedParcelId: "",
+      showConfirmAddressButtonColumn: false,
+      showDeliverButtonColumn: false,
+      showCollectButtonColumn: false
     }
   },
   mounted() {
@@ -105,10 +124,19 @@ export default {
       let loadingInstance = Loading.service({ fullscreen: true });
       this.$api.listParcel(this.currentPageNumber).then(res => {
         loadingInstance.close();
+        this.showConfirmAddressButtonColumn = false;
+        this.showDeliverButtonColumn = false;
         if(res.data.code === 200) {
           res.data.data.records.forEach(parcel => {
+            if (parcel.lastUpdateDesc === "Receiver Confirmed the address") {
+              this.showDeliverButtonColumn = true;
+            }
             if (parcel.lastUpdateDesc === "Broker notify receiver") {
+              this.showConfirmAddressButtonColumn = true;
               parcel.lastUpdateDesc = "Broker notified student, waiting confirm address";
+            }
+            if (parcel.lastUpdateDesc === "Broker send parcel to Merville Room") {
+              this.showCollectButtonColumn = true;
             }
             this.tableData.push({
               id: parcel.id,
@@ -168,6 +196,24 @@ export default {
       this.deliverConfirmDialog = false;
       let loadingInstance = Loading.service({ fullscreen: true });
       this.$api.deliverParcel(this.deliverParcelId).then(res => {
+        loadingInstance.close();
+        if(res.data.code === 200) {
+          this.getParcelData();
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
+    },
+    confirmCollect(id) {
+      this.collectedParcelId = id;
+      this.confirmCollectDialog = true;
+    },
+    doConfirmCollect() {
+      this.confirmCollectDialog = false;
+      let loadingInstance = Loading.service({ fullscreen: true });
+      this.$api.confirmCollected(this.collectedParcelId).then(res => {
         loadingInstance.close();
         if(res.data.code === 200) {
           this.getParcelData();

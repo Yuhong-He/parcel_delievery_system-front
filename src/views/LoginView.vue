@@ -271,7 +271,7 @@ export default{
         if(res.data.code === 200) {
           setUserInfo(res.data.data);
           this.loginLoading = false;
-          this.$router.go(-1);
+          this.$router.push("/");
           this.$message({
             type: 'success',
             message: "Welcome " + res.data.data.username

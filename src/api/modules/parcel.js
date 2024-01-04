@@ -37,6 +37,15 @@ export default {
             }
         })
     },
+    confirmCollected(parcelId) {
+        return request({
+            url: path + "/confirmCollected",
+            method: "post",
+            params: {
+                parcelId: parcelId
+            }
+        })
+    },
     getParcelTracks(parcelId) {
         return request({
             url: path + "/tracks",
