@@ -24,7 +24,7 @@ export default {
   },
   created() {
     document.title = "Home";
-    if (this.username.length === 0 || this.userType === 0) {
+    if (!this.username || this.username.length === 0 || this.userType === 0) {
       this.$router.push("/login");
     }
   },

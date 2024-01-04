@@ -5,9 +5,9 @@
       </el-page-header>
     </div>
     <div class="content">
-      <el-timeline>
+      <el-timeline :reverse="true">
         <el-timeline-item
-            v-for="(activity, index) in activities"
+            v-for="(activity, index) in tracks"
             :key="index"
             :timestamp="activity.timestamp">
           {{activity.content}}
@@ -18,23 +18,38 @@
 </template>
 
 <script>
+import {Loading} from "element-ui";
+import {generalError, unexpectedError} from "@/utils/general";
+
 export default {
   data() {
     return {
-      activities: [{
-        content: '活动按期开始',
-        timestamp: '2018-04-15'
-      }, {
-        content: '通过审核',
-        timestamp: '2018-04-13'
-      }, {
-        content: '创建成功',
-        timestamp: '2018-04-11'
-      }]
+      tracks: []
     };
   },
+  mounted() {
+    this.getParcelTracks();
+  },
   methods: {
-
+    getParcelTracks() {
+      this.tracks = [];
+      let loadingInstance = Loading.service({ fullscreen: true });
+      this.$api.getParcelTracks(this.$route.params.id).then(res => {
+        loadingInstance.close();
+        if(res.data.code === 200) {
+          res.data.data.forEach(track => {
+            this.tracks.push({
+              content: track.description,
+              timestamp: track.create_at
+            })
+          })
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
+    }
   }
 }
 </script>

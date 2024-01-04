@@ -10,12 +10,39 @@ export default {
             data: data
         })
     },
-    listParcel(data) {
+    listParcel(page) {
         return request({
             url: path + "/list",
             method: "get",
             params: {
-                page: data
+                page: page
+            }
+        })
+    },
+    deliverParcel(parcelId) {
+        return request({
+            url: path + "/deliver",
+            method: "post",
+            params: {
+                parcelId: parcelId
+            }
+        })
+    },
+    confirmAddress(parcelId) {
+        return request({
+            url: path + "/confirmAddress",
+            method: "post",
+            params: {
+                parcelId: parcelId
+            }
+        })
+    },
+    getParcelTracks(parcelId) {
+        return request({
+            url: path + "/tracks",
+            method: "get",
+            params: {
+                parcelId: parcelId
             }
         })
     }

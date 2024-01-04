@@ -31,12 +31,6 @@ export default {
   },
   computed: {
     ...mapState('User', ['userType'])
-  },
-  created() {
-    document.title = "Home";
-    if (this.username.length === 0 || this.userType === 0) {
-      this.$router.push("/login");
-    }
   }
 }
 </script>
@@ -48,8 +42,8 @@ export default {
 }
 
 .header-bar-area {
-  height: 10vh;
-  line-height: 10vh;
+  height: 80px;
+  line-height: 80px;
   padding-left: 30px;
   padding-right: 30px;
   background-color: #E4E4E4;

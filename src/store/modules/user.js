@@ -4,7 +4,6 @@ export default {
         username: '',
         userType: 0,
         accessToken: '',
-        refreshToken: '',
         expiredTime: ''
     },
     mutations: {
