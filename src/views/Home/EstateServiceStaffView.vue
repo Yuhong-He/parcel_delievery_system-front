@@ -69,6 +69,7 @@
 <script>
 import ParcelTableView from "@/components/ParcelTableView.vue";
 import {generalError, unexpectedError} from "@/utils/general";
+import {Loading} from "element-ui";
 
 export default {
   components: {
@@ -200,7 +201,9 @@ export default {
       });
     },
     doSubmit(data) {
+      let loadingInstance = Loading.service({ fullscreen: true });
       this.$api.createParcel(data).then(res => {
+        loadingInstance.close();
         if(res.data.code === 200) {
           this.$message({
             message: "Add Success",

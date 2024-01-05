@@ -9,6 +9,7 @@
         <el-timeline-item
             v-for="(activity, index) in tracks"
             :key="index"
+            size="large"
             :timestamp="activity.timestamp">
           {{activity.content}}
         </el-timeline-item>
@@ -38,6 +39,12 @@ export default {
         loadingInstance.close();
         if(res.data.code === 200) {
           res.data.data.forEach(track => {
+            if (track.description === "Broker notify receiver") {
+              track.description = "This parcel will be sent by a postman. Broker notified the student, waiting to confirm address";
+            }
+            if (track.description === "Receiver Confirmed the address") {
+              track.description = "Student confirmed delivery address";
+            }
             this.tracks.push({
               content: track.description,
               timestamp: track.create_at
@@ -63,5 +70,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+/deep/ .el-timeline-item__content {
+  font-size: 1.3em;
 }
 </style>

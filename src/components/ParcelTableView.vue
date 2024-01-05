@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="parcel-table">
-      <el-table :data="tableData" empty-text="No data" style="width: 100%">
+      <el-table :data="tableData" empty-text="No data" :row-class-name="tableRowClassName" style="width: 100%">
         <el-table-column label="Parcel ID" width="160">
           <template v-slot="scope">
             <el-link :underline="false" @click="$router.push('/parcel/' + scope.row.id)">
@@ -33,7 +33,7 @@
         </el-table-column>
         <el-table-column v-if="this.userType === 2 && showDeliverButtonColumn">
           <template v-slot="scope">
-            <el-button icon="el-icon-position" v-if="scope.row.status === 'Receiver Confirmed the address'" @click="deliverConfirm(scope.row.id)" plain>Deliver mail</el-button>
+            <el-button icon="el-icon-position" v-if="scope.row.status === 'Student confirmed the address'" @click="deliverConfirm(scope.row.id)" plain>Deliver mail</el-button>
           </template>
         </el-table-column>
         <el-table-column v-if="this.userType === 3 && showCollectButtonColumn">
@@ -129,7 +129,8 @@ export default {
         if(res.data.code === 200) {
           res.data.data.records.forEach(parcel => {
             if (parcel.lastUpdateDesc === "Receiver Confirmed the address") {
-              this.showDeliverButtonColumn = true;
+              parcel.lastUpdateDesc = "Student confirmed the address";
+                  this.showDeliverButtonColumn = true;
             }
             if (parcel.lastUpdateDesc === "Broker notify receiver") {
               this.showConfirmAddressButtonColumn = true;
@@ -223,6 +224,12 @@ export default {
       }).catch(res => {
         unexpectedError(res);
       })
+    },
+    tableRowClassName({row, rowIndex}) {
+      if (row.status === "Postman delivered the parcel" || row.status === "Student collected parcel") {
+        return 'success-row';
+      }
+      return '';
     }
   }
 }
@@ -244,5 +251,8 @@ export default {
 }
 .el-link.el-link--default:active {
   color: darkorange;
+}
+/deep/ .el-table .success-row {
+  background: #AFE1AF;
 }
 </style>
